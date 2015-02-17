@@ -1,0 +1,240 @@
+<consult>
+	<roles>
+		<role type="World">ww01</role>
+		<role type="Zone">zz01</role>
+		<role type="Zone">zz02</role>
+		<role type="City">cc01</role>
+		<role type="City">cc02</role>
+		<role type="City">cc03</role>
+		<role type="Individual">ii01</role>
+		<role type="Individual">ii02</role>
+	</roles>
+	<pattern type="World" role="ww01">
+		<params>
+			<param type="simple">
+				<paramField>WORLD_NZONES</paramField>
+				<paramType>EQUAL_OR_GREATER_THAN</paramType>
+				<value>2</value>
+			</param>
+			<param type="OR">
+				<param type="simple">
+					<paramField>WORLD_NZONES</paramField>
+					<paramType>GREATER_THAN</paramType>
+					<value>2</value>
+				</param>
+				<param type="simple">
+					<paramField>WORLD_NCITIZENS</paramField>
+					<paramType>GREATER_THAN</paramType>
+					<value>50</value>
+				</param>
+			</param>
+		</params>
+		<contains>
+			<as type="Zone">
+				<pattern type="Zone" role="zz01">
+					<params>
+						<param type="simple">
+							<paramField>ZONE_ID</paramField>
+							<paramType>NOT_EQUALS</paramType>
+							<value>
+								<objectValue>
+									<object role="zz02"/>
+									<paramField>ZONE_ID</paramField>
+								</objectValue>
+							</value>
+						</param>
+					</params>
+					<contains>
+						<as type="City">
+							<pattern type="City" role="cc01">">
+								<params>
+									<param type="simple">
+										<paramField>CITY_ID</paramField>
+										<paramType>NOT_EQUALS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc02"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+									<param type="simple">
+										<paramField>CITY_ID</paramField>
+										<paramType>NOT_EQUALS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc03"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+								</params>
+								<contains>
+									<as type="Citizen">
+										<pattern type="Individual" role="ii01">
+											<params>
+												<param type="simple">
+													<paramField>IND_STR</paramField>
+													<paramType>GREATER_THAN</paramType>
+													<value>60</value>
+												</param>
+												<param type="simple">
+													<paramField>IND_ID</paramField>
+													<paramType>NOT_EQUALS</paramType>
+													<value>
+														<objectValue>
+															<object role="ii02"/>
+															<paramField>IND_ID</paramField>
+														</objectValue>
+													</value>
+												</param>
+												<param type="simple">
+													<paramField>IND_CHILDREN</paramField>
+													<paramType>CONTAINS</paramType>
+													<value>
+														<objectValue>
+															<object role="ii02"/>
+															<paramField>IND_ID</paramField>
+														</objectValue>
+													</value>
+												</param>
+											</params>
+										</pattern>
+									</as>
+								</contains>
+							</pattern>
+						</as>
+						<as type="City">
+							<pattern type="City" role="cc02">
+								<params>
+									<param type="simple">
+										<paramField>CITY_ID</paramField>
+										<paramType>NOT_EQUALS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc01"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+									<param type="simple">
+										<paramField>CITY_ID</paramField>
+										<paramType>NOT_EQUALS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc03"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+									<param type="simple">
+										<paramField>CITY_ADJ</paramField>
+										<paramType>CONTAINS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc03"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+								</params>
+							</pattern>
+						</as>
+					</contains>
+				</pattern>
+			</as>
+			<as type="Zone">
+				<pattern type="Zone" role="zz02">
+					<params>
+						<param type="simple">
+							<paramField>ZONE_ID</paramField>
+							<paramType>NOT_EQUALS</paramType>
+							<value>
+								<objectValue>
+									<object role="zz01"/>
+									<paramField>ZONE_ID</paramField>
+								</objectValue>
+							</value>
+						</param>
+						<param type="simple">
+							<paramField>ZONE_NCITIZENS</paramField>
+							<paramType>GREATER_THAN</paramType>
+							<value>20</value>
+						</param>
+					</params>
+					<contains>
+						<as type="City">
+							<pattern type="City" role="cc03">
+								<params>
+									<param type="simple">
+										<paramField>CITY_ID</paramField>
+										<paramType>NOT_EQUALS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc01"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+									<param type="simple">
+										<paramField>CITY_ID</paramField>
+										<paramType>NOT_EQUALS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc02"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+									<param type="simple">
+										<paramField>CITY_ADJ</paramField>
+										<paramType>CONTAINS</paramType>
+										<value>
+											<objectValue>
+												<object role="cc02"/>
+												<paramField>CITY_ID</paramField>
+											</objectValue>
+										</value>
+									</param>
+								</params>
+								<contains>
+									<as type="Citizen">
+										<pattern type="Individual" role="ii02">
+											<params>
+												<param type="simple">
+													<paramField>IND_STR</paramField>
+													<paramType>LESSER_THAN</paramType>
+													<value>40</value>
+												</param>
+												<param type="simple">
+													<paramField>IND_ID</paramField>
+													<paramType>NOT_EQUALS</paramType>
+													<value>
+														<objectValue>
+															<object role="ii01"/>
+															<paramField>IND_ID</paramField>
+														</objectValue>
+													</value>
+												</param>
+												<param type="simple">
+													<paramField>IND_PARENTS</paramField>
+													<paramType>CONTAINS</paramType>
+													<value>
+														<objectValue>
+															<object role="ii01"/>
+															<paramField>IND_ID</paramField>
+														</objectValue>
+													</value>
+												</param>
+											</params>
+										</pattern>
+									</as>
+								</contains>
+							</pattern>
+						</as>
+					</contains>
+				</pattern>
+			</as>
+		</contains>
+	</pattern>
+</consult>
