@@ -15,9 +15,10 @@ import model.Individual;
 import model.Storable.StorableType;
 import model.interfaces.IAIEngine;
 import pattern_search.Parameter;
-import pattern_search.Parameter.ParamField;
-import pattern_search.Parameter.ParamType;
 import pattern_search.Pattern;
+import pattern_search.SimpleParameter;
+import pattern_search.SimpleParameter.ParamField;
+import pattern_search.SimpleParameter.ParamType;
 import ai_engine.MyAIEngine;
 
 public class MainSTPLD01 {
@@ -56,15 +57,15 @@ public class MainSTPLD01 {
 		
 		Parameter p;
 		List<Parameter> listP = new LinkedList<Parameter>();
-		p = new Parameter(StorableType.INDIVIDUAL, ParamField.IND_BEA, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_BEA, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		p = new Parameter(StorableType.INDIVIDUAL, ParamField.IND_FER, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_FER, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		p = new Parameter(StorableType.INDIVIDUAL, ParamField.IND_CHA, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_CHA, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		p = new Parameter(StorableType.INDIVIDUAL, ParamField.IND_HOR, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_HOR, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		p = new Parameter(StorableType.INDIVIDUAL, ParamField.IND_COM, ParamType.EQUAL_OR_LESSER_THAN, 30);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_COM, ParamType.EQUAL_OR_LESSER_THAN, 30);
 		listP.add(p);
 		Pattern<Individual> pattern = new Pattern<Individual>(listP, new LinkedList<String>());
 		uni.printResults(pattern);
@@ -99,7 +100,7 @@ public class MainSTPLD01 {
 		StoryUniverse res = null;
 		try {
 			if (properties.getProperty("universe") != null) {
-				File file = Universe.getUniverseFile(properties.getProperty("universe"), rootfolder);
+				File file = StoryUniverse.getUniverseFile(properties.getProperty("universe"), rootfolder);
 				res = StoryUniverse.generateFromString(InputOutput.getFileContent(file), aieng, rootfolder);
 			}
 		} catch (MalformedURLException e) {

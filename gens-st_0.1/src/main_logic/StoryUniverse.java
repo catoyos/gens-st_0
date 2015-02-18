@@ -1,9 +1,11 @@
 package main_logic;
 
+import java.io.File;
 import java.util.List;
 
 import pattern_search.Pattern;
 import pattern_search.Result;
+import main_logic.io.InputOutput;
 import model.Arch;
 import model.City;
 import model.City.Direction;
@@ -15,7 +17,7 @@ import model.utils.StringUtils;
 import data_storage.Storage;
 
 public class StoryUniverse {
-
+	private static final String UNIVERSE_FILE = "universe.dat";
 	final String uniID;
 	private World world;
 	
@@ -76,6 +78,14 @@ public class StoryUniverse {
 			e.printStackTrace();
 		}
 		return uni;
+	}
+
+	public static File getUniverseFile(String id) {
+		return new File(InputOutput.getDefaultFilePath(InputOutput.getDefaultFolderPath(id), UNIVERSE_FILE));
+	}
+
+	public static File getUniverseFile(String id, String folder) {
+		return new File(InputOutput.getDefaultFilePath(InputOutput.getDefaultFolderPath(folder, id), UNIVERSE_FILE));
 	}
 
 	public void printResults(Pattern<Individual> pattern) {
