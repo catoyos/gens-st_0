@@ -14,7 +14,7 @@ import main_logic.io.InputOutput;
 import model.Individual;
 import model.Storable.StorableType;
 import model.interfaces.IAIEngine;
-import pattern_search.Parameter;
+import pattern_search.AbstractParameter;
 import pattern_search.Pattern;
 import pattern_search.SimpleParameter;
 import pattern_search.SimpleParameter.ParamField;
@@ -55,8 +55,8 @@ public class MainSTPLD01 {
 
 		System.out.println(StoryUniverse.worldToString(uni.getWorld()));
 		
-		Parameter p;
-		List<Parameter> listP = new LinkedList<Parameter>();
+		AbstractParameter p;
+		List<AbstractParameter> listP = new LinkedList<AbstractParameter>();
 		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_BEA, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
 		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_FER, ParamType.EQUAL_OR_GREATER_THAN, 60);
@@ -67,8 +67,10 @@ public class MainSTPLD01 {
 		listP.add(p);
 		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_COM, ParamType.EQUAL_OR_LESSER_THAN, 30);
 		listP.add(p);
-		Pattern<Individual> pattern = new Pattern<Individual>(listP, new LinkedList<String>());
-		uni.printResults(pattern);
+		Pattern<Individual> patternInd = new Pattern<Individual>("ii01", listP);
+		
+		
+		uni.printResults(patternInd);
 	}
 
 	private IAIEngine loadAIEngine() {

@@ -2,11 +2,11 @@ package pattern_search;
 
 import model.Storable;
 
-public class NOTParameter extends Parameter {
+public class NOTParameter extends AbstractParameter {
 
-	private Parameter param;
+	private AbstractParameter param;
 	
-	public NOTParameter(Parameter param) {
+	public NOTParameter(AbstractParameter param) {
 		//TODO CONTROLAR NULLS, THIS==PARAM...
 		this.param = param;
 	}

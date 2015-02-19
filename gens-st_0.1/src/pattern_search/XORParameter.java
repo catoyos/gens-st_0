@@ -2,12 +2,12 @@ package pattern_search;
 
 import model.Storable;
 
-public class XORParameter extends Parameter {
+public class XORParameter extends AbstractParameter {
 
-	private Parameter param1;
-	private Parameter param2;
+	private AbstractParameter param1;
+	private AbstractParameter param2;
 	
-	public XORParameter(Parameter param1, Parameter param2) {
+	public XORParameter(AbstractParameter param1, AbstractParameter param2) {
 		//TODO CONTROLAR NULLS, THIS==PARAM...
 		this.param1 = param1;
 		this.param2 = param2;

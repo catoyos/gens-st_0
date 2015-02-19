@@ -1,22 +1,24 @@
 package pattern_search;
 
 import java.util.HashMap;
-import java.util.List;
 
 import model.Storable;
 
 public class Result<T extends Storable> {
 
 	private boolean positive;
-	private final Pattern<T> pattern;
 	private T res;
 	private HashMap<String, Storable> roles;
 	
-	protected Result(Pattern<T> pattern, T res) {
+	protected Result(T res, String role) {
+		this(res, role, new HashMap<String, Storable>());
+	}
+	
+	protected Result(T res, String role, HashMap<String, Storable> roles) {
 		this.positive = false;
-		this.pattern = pattern;
 		this.res = res;
-		this.roles = new HashMap<String, Storable>(2 * pattern.getNRoles());
+		this.roles = new HashMap<String, Storable>(roles);
+		this.roles.put(role, res);
 	}
 
 	public boolean isPositive() {
@@ -43,8 +45,8 @@ public class Result<T extends Storable> {
 		this.roles = roles;
 	}
 
-	public Pattern<T> getPattern() {
-		return pattern;
+	public Storable put(String key, Storable object) {
+		return roles.put(key, object);
 	}
 
 	public boolean containsRole(String key) {
@@ -61,18 +63,5 @@ public class Result<T extends Storable> {
 
 	public int getNRoles() {
 		return roles.size();
-	}
-		
-	public boolean containsAllPatternRoles(){
-		if (roles.size() != pattern.getNRoles()) {
-			return false;
-		}
-		List<String> ptRoles = pattern.getRoles();
-		for (String role : ptRoles) {
-			if (!roles.containsKey(role)) {
-				return false;
-			}
-		}
-		return true;
 	}
 }

@@ -8,7 +8,7 @@ import model.Storable.StorableType;
 import model.World;
 import model.Zone;
 
-public class SimpleParameter extends Parameter {
+public class SimpleParameter extends AbstractParameter {
 
 	public static enum ParamType {
 		EQUALS, EQUAL_OR_GREATER_THAN, EQUAL_OR_LESSER_THAN, GREATER_THAN, LESSER_THAN, NOT_EQUALS

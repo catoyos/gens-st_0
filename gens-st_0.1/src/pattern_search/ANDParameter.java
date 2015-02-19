@@ -5,12 +5,12 @@ import java.util.List;
 
 import model.Storable;
 
-public class ANDParameter extends Parameter {
+public class ANDParameter extends AbstractParameter {
 	
-	private List<Parameter> params;
+	private List<AbstractParameter> params;
 	
-	public ANDParameter(Parameter param1, Parameter param2) {
-		this.params = new ArrayList<Parameter>(2);
+	public ANDParameter(AbstractParameter param1, AbstractParameter param2) {
+		this.params = new ArrayList<AbstractParameter>(2);
 		if (param1 != null && this != param1) {
 			this.params.add(param1);
 		}
@@ -20,19 +20,19 @@ public class ANDParameter extends Parameter {
 		}
 	}
 
-	public ANDParameter(List<Parameter> params) {
-		this.params = new ArrayList<Parameter>(params.size());
-		for (Parameter parameter : params) {
-			if (parameter != null && this != parameter && !params.contains(parameter)) {
-				this.params.add(parameter);
+	public ANDParameter(List<AbstractParameter> params) {
+		this.params = new ArrayList<AbstractParameter>(params.size());
+		for (AbstractParameter abstractParameter : params) {
+			if (abstractParameter != null && this != abstractParameter && !params.contains(abstractParameter)) {
+				this.params.add(abstractParameter);
 			}
 		}
 	}
 
 	@Override
 	public boolean eval(Storable target) {
-		for (Parameter parameter : params) {
-			if (!parameter.eval(target)) {
+		for (AbstractParameter abstractParameter : params) {
+			if (!abstractParameter.eval(target)) {
 				return false;
 			}
 		}

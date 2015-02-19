@@ -1,0 +1,26 @@
+<results>
+	<result>
+		<players>
+			<player type="World" role="ww01">WSDZX</player>
+			<player type="Zone" role="zz01">WSDZXTH</player>
+			<player type="Zone" role="zz02">WSDZXTI</player>
+			<player type="City" role="cc01">WSDZXFGB</player>
+			<player type="City" role="cc02">WSDZXFGN</player>
+			<player type="City" role="cc03">WSDZXFGM</player>
+			<player type="Individual" role="ii01">TH0000215</player>
+			<player type="Individual" role="ii02">TI0000186</player>
+		</players>
+	</result>
+	<result>
+		<players>
+			<player type="World" role="ww01">WSDZX</player>
+			<player type="Zone" role="zz01">WSDZXTH</player>
+			<player type="Zone" role="zz02">WSDZXTI</player>
+			<player type="City" role="cc01">WSDZXFGB</player>
+			<player type="City" role="cc02">WSDZXFGN</player>
+			<player type="City" role="cc03">WSDZXFGM</player>
+			<player type="Individual" role="ii01">TH0000215</player>
+			<player type="Individual" role="ii02">TI0000187</player>
+		</players>
+	</result>
+</results>

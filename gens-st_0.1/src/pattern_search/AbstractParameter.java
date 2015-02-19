@@ -2,7 +2,7 @@ package pattern_search;
 
 import model.Storable;
 
-public abstract class Parameter {
+public abstract class AbstractParameter {
 	
 	public abstract boolean eval(Storable target);
 	
