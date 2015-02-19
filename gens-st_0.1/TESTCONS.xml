@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <consult>
 	<roles>
 		<role type="World">ww01</role>
@@ -38,7 +39,7 @@
 							<paramType>NOT_EQUALS</paramType>
 							<value>
 								<objectValue>
-									<object role="zz02"/>
+									<object role="zz02" />
 									<paramField>ZONE_ID</paramField>
 								</objectValue>
 							</value>
@@ -46,14 +47,14 @@
 					</params>
 					<contains>
 						<as type="City">
-							<pattern type="City" role="cc01">">
+							<pattern type="City" role="cc01">
 								<params>
 									<param type="simple">
 										<paramField>CITY_ID</paramField>
 										<paramType>NOT_EQUALS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc02"/>
+												<object role="cc02" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -63,7 +64,7 @@
 										<paramType>NOT_EQUALS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc03"/>
+												<object role="cc03" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -83,7 +84,7 @@
 													<paramType>NOT_EQUALS</paramType>
 													<value>
 														<objectValue>
-															<object role="ii02"/>
+															<object role="ii02" />
 															<paramField>IND_ID</paramField>
 														</objectValue>
 													</value>
@@ -93,7 +94,7 @@
 													<paramType>CONTAINS</paramType>
 													<value>
 														<objectValue>
-															<object role="ii02"/>
+															<object role="ii02" />
 															<paramField>IND_ID</paramField>
 														</objectValue>
 													</value>
@@ -112,7 +113,7 @@
 										<paramType>NOT_EQUALS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc01"/>
+												<object role="cc01" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -122,7 +123,7 @@
 										<paramType>NOT_EQUALS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc03"/>
+												<object role="cc03" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -132,7 +133,7 @@
 										<paramType>CONTAINS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc03"/>
+												<object role="cc03" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -151,7 +152,7 @@
 							<paramType>NOT_EQUALS</paramType>
 							<value>
 								<objectValue>
-									<object role="zz01"/>
+									<object role="zz01" />
 									<paramField>ZONE_ID</paramField>
 								</objectValue>
 							</value>
@@ -171,7 +172,7 @@
 										<paramType>NOT_EQUALS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc01"/>
+												<object role="cc01" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -181,7 +182,7 @@
 										<paramType>NOT_EQUALS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc02"/>
+												<object role="cc02" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -191,7 +192,7 @@
 										<paramType>CONTAINS</paramType>
 										<value>
 											<objectValue>
-												<object role="cc02"/>
+												<object role="cc02" />
 												<paramField>CITY_ID</paramField>
 											</objectValue>
 										</value>
@@ -211,7 +212,7 @@
 													<paramType>NOT_EQUALS</paramType>
 													<value>
 														<objectValue>
-															<object role="ii01"/>
+															<object role="ii01" />
 															<paramField>IND_ID</paramField>
 														</objectValue>
 													</value>
@@ -221,7 +222,7 @@
 													<paramType>CONTAINS</paramType>
 													<value>
 														<objectValue>
-															<object role="ii01"/>
+															<object role="ii01" />
 															<paramField>IND_ID</paramField>
 														</objectValue>
 													</value>

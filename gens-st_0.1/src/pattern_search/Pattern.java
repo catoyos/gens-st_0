@@ -33,6 +33,10 @@ public class Pattern<T extends Storable> {
 		this(null, role, params, null);
 	}
 	
+	public Pattern(PatternContainsAs as, String role, List<AbstractParameter> params) {
+		this(as, role, params, null);
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public Pattern(String role, List<AbstractParameter> params, List<Pattern> contains) {
 		this(null, role, params, contains);

@@ -88,24 +88,37 @@ public class StoryUniverse {
 		return new File(InputOutput.getDefaultFilePath(InputOutput.getDefaultFolderPath(folder, id), UNIVERSE_FILE));
 	}
 
-	public void printResults(Pattern<Individual> pattern) {
+//	public void printResults(Pattern<Individual> pattern) {
+//		long t0,t1;
+//		System.out.println(world.getWorldID());
+//		List<Zone> zones = world.getZones();
+//		for (Zone zone : zones) {
+//			System.out.println(zone.getZoneID());
+//			List<City> cities = zone.getCities();
+//			for (City city : cities) {
+//				System.out.println(city.getCityID());
+//				t0 = System.currentTimeMillis();
+//				List<Result<Individual>> res = pattern.eval(city.getCitizenInd());
+//				t1 = System.currentTimeMillis();
+//				System.out.print("("+(t1-t0)+"ms.)");
+//				System.out.println("("+res.size()+"/"+city.getNCitizens()+" = "+100*(res.size()/(float)city.getNCitizens())+"%)");
+//				for (Result<Individual> result : res) {
+//					System.out.println(indiToString(result.getRes()));
+//				}
+//			}
+//		}
+//	}
+
+	public void printResults(Pattern<World> pattern) {
 		long t0,t1;
-		System.out.println(world.getWorldID());
-		List<Zone> zones = world.getZones();
-		for (Zone zone : zones) {
-			System.out.println(zone.getZoneID());
-			List<City> cities = zone.getCities();
-			for (City city : cities) {
-				System.out.println(city.getCityID());
-				t0 = System.currentTimeMillis();
-				List<Result<Individual>> res = pattern.eval(city.getCitizenInd());
-				t1 = System.currentTimeMillis();
-				System.out.print("("+(t1-t0)+"ms.)");
-				System.out.println("("+res.size()+"/"+city.getNCitizens()+" = "+100*(res.size()/(float)city.getNCitizens())+"%)");
-				for (Result<Individual> result : res) {
-					System.out.println(indiToString(result.getRes()));
-				}
-			}
+		t0 = System.currentTimeMillis();
+		Result<World> res = pattern.eval(world);
+		t1 = System.currentTimeMillis();
+		System.out.print("("+(t1-t0)+"ms.)");
+		if (res.isPositive()) {
+			System.out.println(worldToString(res.getRes()));
+		} else {
+			System.out.println("nope");
 		}
 	}
 
