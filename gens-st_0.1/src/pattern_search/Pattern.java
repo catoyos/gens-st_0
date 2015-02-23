@@ -1,9 +1,16 @@
 package pattern_search;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import model.City;
+import model.Individual;
+import model.Language;
 import model.Storable;
+import model.Storable.StorableType;
+import model.World;
+import model.Zone;
 
 public class Pattern<T extends Storable> {
 	public enum PatternContainsAs {
@@ -16,36 +23,36 @@ public class Pattern<T extends Storable> {
 		};
 	
 	private PatternContainsAs as;
-	private String role;
+	private String mainRole;
+	private StorableType type;
+	private HashMap<String, Storable> roles;
 	private List<AbstractParameter> params;
-	@SuppressWarnings("rawtypes")
-	private List<Pattern> contains;
+	private List<Pattern<? extends Storable>> contains;
 
-	public Pattern(String role) {
-		this(null, role, null, null);
+	public Pattern(String role, StorableType type) {
+		this(null, role, type, null, null);
 	}
 	
-	public Pattern(PatternContainsAs as, String role) {
-		this(as, role, null, null);
+	public Pattern(PatternContainsAs as, String role, StorableType type) {
+		this(as, role, type, null, null);
 	}
 	
-	public Pattern(String role, List<AbstractParameter> params) {
-		this(null, role, params, null);
+	public Pattern(String role, StorableType type, List<AbstractParameter> params) {
+		this(null, role, type, params, null);
 	}
 	
-	public Pattern(PatternContainsAs as, String role, List<AbstractParameter> params) {
-		this(as, role, params, null);
+	public Pattern(PatternContainsAs as, String role, StorableType type, List<AbstractParameter> params) {
+		this(as, role, type, params, null);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public Pattern(String role, List<AbstractParameter> params, List<Pattern> contains) {
-		this(null, role, params, contains);
+	public Pattern(String role, StorableType type, List<AbstractParameter> params, List<Pattern<? extends Storable>> contains) {
+		this(null, role, type, params, contains);
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public Pattern(PatternContainsAs as, String role, List<AbstractParameter> params, List<Pattern> contains) {
+	public Pattern(PatternContainsAs as, String role, StorableType type, List<AbstractParameter> params, List<Pattern<? extends Storable>> contains) {
 		this.as = as;
-		this.role = role;
+		this.mainRole = role;
+		this.type = type;
 		this.params = new LinkedList<AbstractParameter>();
 		if (params != null) {
 			for (AbstractParameter parameter : params) {
@@ -54,9 +61,9 @@ public class Pattern<T extends Storable> {
 				}
 			}
 		}
-		this.contains = new LinkedList<Pattern>();
+		this.contains = new LinkedList<Pattern<? extends Storable>>();
 		if (contains != null) {
-			for (Pattern pattern : contains) {
+			for (Pattern<? extends Storable> pattern : contains) {
 				if (pattern != null) {
 					this.contains.add(pattern);
 				}
@@ -64,16 +71,6 @@ public class Pattern<T extends Storable> {
 		}
 	}
 
-	public Result<T> eval(T object){
-		Result<T> res = new Result<T> (object, role);
-		boolean pos = true;
-		for (AbstractParameter abstractParameter : params) {
-			pos &= abstractParameter.eval(object);
-		}
-		res.setPositive(pos);
-		return res;
-	}
-	
 	public List<Result<T>> eval(List<T> objects){
 		List<Result<T>> res = new LinkedList<Result<T>> ();
 		Result<T> aux = null;
@@ -86,12 +83,202 @@ public class Pattern<T extends Storable> {
 		return res;
 	}
 
+	@SuppressWarnings("unchecked")
+	public Result<T> eval(T object){
+		Result<T> res = new Result<T> (object, mainRole);
+		if (object == null) return res;
+		boolean pos = true;
+		for (AbstractParameter abstractParameter : params) {
+			pos &= abstractParameter.eval(object);
+		}
+		
+		if (pos) {
+			List<?> containsResults = null;
+			for (Pattern<? extends Storable> member : contains) {
+				switch (member.type) {
+				case WORLD:
+					containsResults = evalChildWorldPattern(object, (Pattern<World>) member);
+					break;
+				case ZONE:
+					containsResults = evalChildZonePattern(object, (Pattern<Zone>) member);
+					break;
+				case LANGUAGE:
+					containsResults = evalChildLanguagePattern(object, (Pattern<Language>) member);
+					break;
+				case CITY:
+					containsResults = evalChildCityPattern(object, (Pattern<City>) member);
+					break;
+				case INDIVIDUAL:
+					containsResults = evalChildIndividualPattern(object, (Pattern<Individual>) member);
+					break;
+				default:
+					containsResults = null;
+					break;
+				}
+				
+				pos &= (containsResults != null && !containsResults.isEmpty());
+			}
+		}
+		
+		res.setPositive(pos);
+		return res;
+	}
+
+	private List<Result<World>> evalChildWorldPattern(T object, Pattern<World> member) {
+		List<Result<World>> res = null;
+		List<World> aux = new LinkedList<World>();
+		
+		switch (member.as) {
+		case ZONE_PARENT_WORLD:
+			if (object.TYPE != StorableType.ZONE || this.type != StorableType.ZONE) return null;
+			aux.add(((Zone) object).getParentWorld());
+			break;
+		default: return null;
+		}
+
+		res = member.eval(aux);
+		return res;
+	}
+
+	private List<Result<Zone>> evalChildZonePattern(T object, Pattern<Zone> member) {
+		List<Result<Zone>> res = null;
+		List<Zone> aux = new LinkedList<Zone>();
+		
+		switch (member.as) {
+		case WORLD_CHILD_ZONE:
+			if (object.TYPE != StorableType.WORLD || this.type != StorableType.WORLD) return null;
+			aux.addAll(((World) object).getZones());
+			break;
+		case CITY_PARENT_ZONE:
+			if (object.TYPE != StorableType.CITY || this.type != StorableType.CITY) return null;
+			aux.add(((City) object).getParentZone());
+			break;
+		case IND_CURRENT_ZONE:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			aux.add(((Individual) object).getCurrentZone());
+			break;
+		case IND_ORIGINAL_ZONE:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			aux.add(((Individual) object).getOriginalZone());
+			break;
+		default: return null;
+		}
+		
+		res = member.eval(aux);
+		return res;
+	}
+
+	private List<Result<Language>> evalChildLanguagePattern(T object, Pattern<Language> member) {
+		List<Result<Language>> res = null;
+		List<Language> aux = null;
+		
+//		switch (member.as) {
+//		
+//		default: return null;
+//		}
+
+		res = member.eval(aux);
+		return res;
+	}
+
+	private List<Result<City>> evalChildCityPattern(T object, Pattern<City> member) {
+		List<Result<City>> res = null;
+		List<City> aux = new LinkedList<City>();
+		
+		switch (member.as) {
+		case ZONE_CHILD_CITY:
+			if (object.TYPE != StorableType.ZONE || this.type != StorableType.ZONE) return null;
+			aux.addAll(((Zone) object).getCities());
+			break;
+		case CITY_ADJ_CITY:
+			if (object.TYPE != StorableType.CITY || this.type != StorableType.CITY) return null;
+			//TODO CITY_ADJ_CITY:
+			break;
+		case IND_CURRENT_CITY:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			aux.add(((Individual) object).getCurrentCity());
+			break;
+		default: return null;
+		}
+
+		res = member.eval(aux);
+		return res;
+	}
+
+	private List<Result<Individual>> evalChildIndividualPattern(T object, Pattern<Individual> member) {
+		List<Result<Individual>> res = null;
+		List<Individual> aux = new LinkedList<Individual>();
+		
+		switch (member.as) {
+		case WORLD_CITIZEN:
+			if (object.TYPE != StorableType.WORLD || this.type != StorableType.WORLD) return null;
+			//TODO WORLD_CITIZEN:
+			break;
+		case ZONE_CITIZEN:
+			if (object.TYPE != StorableType.ZONE || this.type != StorableType.ZONE) return null;
+			//TODO ZONE_CITIZEN:
+			break;
+		case CITY_CITIZEN:
+			if (object.TYPE != StorableType.CITY || this.type != StorableType.CITY) return null;
+			aux.addAll(((City) object).getCitizenInd());
+			break;
+		case IND_CHILD:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			aux.addAll(((Individual) object).getChildren());
+			break;
+		case IND_FATHER:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			//TODO IND_FATHER:
+			break;
+		case IND_GRANDCHILD:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			//TODO IND_GRANDCHILD:
+			break;
+		case IND_GRANDPARENT:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			//TODO IND_GRANDPARENT:
+			break;
+		case IND_MOTHER:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			//TODO IND_MOTHER:
+			break;
+		case IND_PARENT:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			//TODO IND_PARENT:
+			break;
+		case IND_PARTNER:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			aux.add(((Individual) object).getPartner());
+			break;
+		case IND_SIBLING:
+			if (object.TYPE != StorableType.INDIVIDUAL || this.type != StorableType.INDIVIDUAL) return null;
+			//TODO IND_SIBLING:
+			break;
+		default: return null;
+		}
+
+		res = member.eval(aux);
+		return res;
+	}
+
 	public PatternContainsAs getAs() {
 		return as;
 	}
 
-	public String getRole() {
-		return role;
+	public String getMainRole() {
+		return mainRole;
+	}
+
+	public StorableType getType() {
+		return type;
+	}
+
+	public HashMap<String, Storable> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(HashMap<String, Storable> roles) {
+		this.roles = roles;
 	}
 	
 	

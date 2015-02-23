@@ -13,6 +13,7 @@ import java.util.Properties;
 import main_logic.io.InputOutput;
 import model.City;
 import model.Individual;
+import model.Storable;
 import model.Storable.StorableType;
 import model.World;
 import model.Zone;
@@ -61,12 +62,69 @@ public class MainSTPLD01 {
 		System.out.println(StoryUniverse.worldToString(uni.getWorld()));
 		
 
-		Pattern<World> patternInd = buildTestPattern();
+		Pattern<World> patternInd = buildTestPattern2();
 		uni.printResults(patternInd);
 	}
 
+
+	private Pattern<World> buildTestPattern2() {
+		List<Pattern<? extends Storable>> aux;
+		
+		Pattern<Individual> pii01 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii01", StorableType.INDIVIDUAL, null, null);
+		aux = new LinkedList<Pattern<?>>();
+		aux.add(pii01);
+		Pattern<Individual> pii02 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii02", StorableType.INDIVIDUAL, null, null);
+		aux.add(pii02);
+		
+		Pattern<City> pcc01 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc01", StorableType.CITY, null, aux);
+		
+		
+		Pattern<Individual> pii03 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii03", StorableType.INDIVIDUAL, null, null);
+		aux = new LinkedList<Pattern<?>>();
+		aux.add(pii03);
+		Pattern<Individual> pii04 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii04", StorableType.INDIVIDUAL, null, null);
+		aux.add(pii04);
+		
+		Pattern<City> pcc02 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc01", StorableType.CITY, null, aux);
+		aux = new LinkedList<Pattern<?>>();
+		aux.add(pcc01);
+		aux.add(pcc02);
+		
+		Pattern<Zone> pzz01 = new Pattern<Zone>(PatternContainsAs.WORLD_CHILD_ZONE, "zz01", StorableType.ZONE, null, aux);
+		
+		Pattern<Individual> pii05 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii05", StorableType.INDIVIDUAL, null, null);
+		aux = new LinkedList<Pattern<?>>();
+		aux.add(pii05);
+		Pattern<Individual> pii06 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii06", StorableType.INDIVIDUAL, null, null);
+		aux.add(pii06);
+		
+		Pattern<City> pcc03 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc03", StorableType.CITY, null, aux);
+		
+		
+		Pattern<Individual> pii07 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii07", StorableType.INDIVIDUAL, null, null);
+		aux = new LinkedList<Pattern<?>>();
+		aux.add(pii07);
+		Pattern<Individual> pii08 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii08", StorableType.INDIVIDUAL, null, null);
+		aux.add(pii08);
+		
+		Pattern<City> pcc04 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc04", StorableType.CITY, null, aux);
+		aux = new LinkedList<Pattern<?>>();
+		aux.add(pcc03);
+		aux.add(pcc04);
+		
+		Pattern<Zone> pzz02 = new Pattern<Zone>(PatternContainsAs.WORLD_CHILD_ZONE, "zz02", StorableType.ZONE, null, aux);
+		aux = new LinkedList<Pattern<?>>();
+		aux.add(pzz01);
+		aux.add(pzz02);
+		
+		Pattern<World> pww01 = new Pattern<World>("ww01", StorableType.WORLD, null, aux);
+		
+		
+		return pww01;
+
+	}
 	
-	private Pattern<World> buildTestPattern(){
+	private Pattern<World> buildTestPattern1(){
 		Pattern<World> pww01;
 		Pattern<Zone> pzz01;
 		Pattern<Zone> pzz02;
@@ -77,7 +135,7 @@ public class MainSTPLD01 {
 		Pattern<Individual> pii02;
 		AbstractParameter p;
 		List<AbstractParameter> listP;
-		List<Pattern> listPatt;
+		List<Pattern<? extends Storable>> listPatt;
 		
 		
 		listP = new LinkedList<AbstractParameter>();
@@ -85,7 +143,7 @@ public class MainSTPLD01 {
 		listP.add(p);
 		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_FER, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		pii01 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii01", listP);
+		pii01 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii01", StorableType.INDIVIDUAL, listP, null);
 		
 		
 		listP = new LinkedList<AbstractParameter>();
@@ -95,34 +153,34 @@ public class MainSTPLD01 {
 		listP.add(p);
 		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_COM, ParamType.EQUAL_OR_LESSER_THAN, 30);
 		listP.add(p);
-		pii02 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii02", listP);
+		pii02 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii02", StorableType.INDIVIDUAL, listP, null);
 
 		listP = new LinkedList<AbstractParameter>();
-		listPatt = new LinkedList<Pattern>();
+		listPatt = new LinkedList<Pattern<? extends Storable>>();
 		listPatt.add(pii01);
-		pcc01 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc01", listP, listPatt);
+		pcc01 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc01", StorableType.CITY, listP, listPatt);
 
 		listP = new LinkedList<AbstractParameter>();
-		listPatt = new LinkedList<Pattern>();
-		pcc02 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc02", listP, listPatt);
+		listPatt = new LinkedList<Pattern<? extends Storable>>();
+		pcc02 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc02", StorableType.CITY, listP, listPatt);
 
 		listP = new LinkedList<AbstractParameter>();
-		listPatt = new LinkedList<Pattern>();
+		listPatt = new LinkedList<Pattern<? extends Storable>>();
 		listPatt.add(pcc01);
 		listPatt.add(pcc02);
-		pzz01 = new Pattern<Zone>(PatternContainsAs.WORLD_CHILD_ZONE, "zz01", listP, listPatt);
+		pzz01 = new Pattern<Zone>(PatternContainsAs.WORLD_CHILD_ZONE, "zz01", StorableType.ZONE, listP, listPatt);
 
 		listP = new LinkedList<AbstractParameter>();
-		listPatt = new LinkedList<Pattern>();
+		listPatt = new LinkedList<Pattern<? extends Storable>>();
 		listPatt.add(pii02);
-		pcc03 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc03", listP, listPatt);
+		pcc03 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc03", StorableType.CITY, listP, listPatt);
 
 		listP = new LinkedList<AbstractParameter>();
 		p = new SimpleParameter(StorableType.ZONE, ParamField.ZONE_NCITIZENS, ParamType.GREATER_THAN, 20);
 		listP.add(p);
-		listPatt = new LinkedList<Pattern>();
+		listPatt = new LinkedList<Pattern<? extends Storable>>();
 		listPatt.add(pcc03);
-		pzz02 = new Pattern<Zone>(PatternContainsAs.WORLD_CHILD_ZONE, "zz02", listP, listPatt);
+		pzz02 = new Pattern<Zone>(PatternContainsAs.WORLD_CHILD_ZONE, "zz02", StorableType.ZONE, listP, listPatt);
 
 
 		listP = new LinkedList<AbstractParameter>();
@@ -135,11 +193,11 @@ public class MainSTPLD01 {
 		listAux.add(p);
 		p = new ORParameter(listAux);
 		listP.add(p);
-		
-		listPatt = new LinkedList<Pattern>();
+
+		listPatt = new LinkedList<Pattern<? extends Storable>>();
 		listPatt.add(pzz01);
 		listPatt.add(pzz02);
-		pww01 = new Pattern<World>("ww01", listP, listPatt);
+		pww01 = new Pattern<World>("ww01", StorableType.WORLD, listP, listPatt);
 
 		return pww01;
 		
