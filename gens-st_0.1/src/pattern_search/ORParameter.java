@@ -39,6 +39,16 @@ public class ORParameter extends AbstractParameter {
 	}
 
 	@Override
+	public boolean isComplex() {
+		for (AbstractParameter abstractParameter : params) {
+			if (abstractParameter.isComplex()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

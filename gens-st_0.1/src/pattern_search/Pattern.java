@@ -13,6 +13,7 @@ import model.World;
 import model.Zone;
 
 public class Pattern<T extends Storable> {
+	//TODO change to StorableField
 	public enum PatternContainsAs {
 		WORLD_CHILD_ZONE, WORLD_CITIZEN,
 		ZONE_PARENT_WORLD, ZONE_CHILD_CITY, ZONE_CITIZEN,
@@ -26,7 +27,8 @@ public class Pattern<T extends Storable> {
 	private String mainRole;
 	private StorableType type;
 	private HashMap<String, Storable> roles;
-	private List<AbstractParameter> params;
+	private List<AbstractParameter> paramsS;
+	private List<AbstractParameter> paramsC;//TODO
 	private List<Pattern<? extends Storable>> contains;
 
 	public Pattern(String role, StorableType type) {
@@ -53,11 +55,11 @@ public class Pattern<T extends Storable> {
 		this.as = as;
 		this.mainRole = role;
 		this.type = type;
-		this.params = new LinkedList<AbstractParameter>();
+		this.paramsS = new LinkedList<AbstractParameter>();
 		if (params != null) {
 			for (AbstractParameter parameter : params) {
 				if (parameter != null) {
-					this.params.add(parameter);
+					this.paramsS.add(parameter);
 				}
 			}
 		}
@@ -88,7 +90,7 @@ public class Pattern<T extends Storable> {
 		Result<T> res = new Result<T> (object, mainRole);
 		if (object == null) return res;
 		boolean pos = true;
-		for (AbstractParameter abstractParameter : params) {
+		for (AbstractParameter abstractParameter : paramsS) {
 			pos &= abstractParameter.eval(object);
 		}
 		

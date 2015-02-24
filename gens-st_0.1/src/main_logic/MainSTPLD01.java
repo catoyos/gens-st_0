@@ -23,8 +23,8 @@ import pattern_search.ORParameter;
 import pattern_search.Pattern;
 import pattern_search.Pattern.PatternContainsAs;
 import pattern_search.SimpleParameter;
-import pattern_search.SimpleParameter.ParamField;
 import pattern_search.SimpleParameter.ParamType;
+import pattern_search.StorableFieldManager.StorableField;
 import ai_engine.MyAIEngine;
 
 public class MainSTPLD01 {
@@ -124,6 +124,7 @@ public class MainSTPLD01 {
 
 	}
 	
+	@SuppressWarnings("unused")
 	private Pattern<World> buildTestPattern1(){
 		Pattern<World> pww01;
 		Pattern<Zone> pzz01;
@@ -139,19 +140,19 @@ public class MainSTPLD01 {
 		
 		
 		listP = new LinkedList<AbstractParameter>();
-		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_BEA, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, StorableField.IND_BEA, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_FER, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, StorableField.IND_FER, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
 		pii01 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii01", StorableType.INDIVIDUAL, listP, null);
 		
 		
 		listP = new LinkedList<AbstractParameter>();
-		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_CHA, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, StorableField.IND_CHA, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_HOR, ParamType.EQUAL_OR_GREATER_THAN, 60);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, StorableField.IND_HOR, ParamType.EQUAL_OR_GREATER_THAN, 60);
 		listP.add(p);
-		p = new SimpleParameter(StorableType.INDIVIDUAL, ParamField.IND_COM, ParamType.EQUAL_OR_LESSER_THAN, 30);
+		p = new SimpleParameter(StorableType.INDIVIDUAL, StorableField.IND_COM, ParamType.EQUAL_OR_LESSER_THAN, 30);
 		listP.add(p);
 		pii02 = new Pattern<Individual>(PatternContainsAs.CITY_CITIZEN, "ii02", StorableType.INDIVIDUAL, listP, null);
 
@@ -176,7 +177,7 @@ public class MainSTPLD01 {
 		pcc03 = new Pattern<City>(PatternContainsAs.ZONE_CHILD_CITY, "cc03", StorableType.CITY, listP, listPatt);
 
 		listP = new LinkedList<AbstractParameter>();
-		p = new SimpleParameter(StorableType.ZONE, ParamField.ZONE_NCITIZENS, ParamType.GREATER_THAN, 20);
+		p = new SimpleParameter(StorableType.ZONE, StorableField.ZONE_NCITIZENS, ParamType.GREATER_THAN, 20);
 		listP.add(p);
 		listPatt = new LinkedList<Pattern<? extends Storable>>();
 		listPatt.add(pcc03);
@@ -184,12 +185,12 @@ public class MainSTPLD01 {
 
 
 		listP = new LinkedList<AbstractParameter>();
-		p = new SimpleParameter(StorableType.WORLD, ParamField.WORLD_NZONES, ParamType.EQUAL_OR_GREATER_THAN, 2);
+		p = new SimpleParameter(StorableType.WORLD, StorableField.WORLD_NZONES, ParamType.EQUAL_OR_GREATER_THAN, 2);
 		listP.add(p);
 		List<AbstractParameter> listAux = new LinkedList<AbstractParameter>();
-		p = new SimpleParameter(StorableType.WORLD, ParamField.WORLD_NZONES, ParamType.GREATER_THAN, 2);
+		p = new SimpleParameter(StorableType.WORLD, StorableField.WORLD_NZONES, ParamType.GREATER_THAN, 2);
 		listAux.add(p);
-		p = new SimpleParameter(StorableType.WORLD, ParamField.WORLD_NCITIZENS, ParamType.EQUAL_OR_GREATER_THAN, 50);
+		p = new SimpleParameter(StorableType.WORLD, StorableField.WORLD_NCITIZENS, ParamType.EQUAL_OR_GREATER_THAN, 50);
 		listAux.add(p);
 		p = new ORParameter(listAux);
 		listP.add(p);

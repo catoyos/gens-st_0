@@ -17,6 +17,11 @@ public class NOTParameter extends AbstractParameter {
 	}
 
 	@Override
+	public boolean isComplex() {
+		return param.isComplex();
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

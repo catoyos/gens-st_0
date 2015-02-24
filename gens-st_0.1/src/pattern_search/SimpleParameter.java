@@ -9,13 +9,14 @@ import model.Storable;
 import model.Storable.StorableType;
 import model.World;
 import model.Zone;
-import pattern_search.SimpleParameter.ParamField;
+import pattern_search.StorableFieldManager.StorableField;
 
 class ComplexValueObject extends ValueObject {
 	private String role;
-	private ParamField field;
+	private StorableField field;
 	
-	public ComplexValueObject(String role, ParamField field) {
+	public ComplexValueObject(String role, StorableField field) {
+		super(true);
 		this.role = role;
 		this.field = field;
 	}
@@ -28,117 +29,41 @@ class ComplexValueObject extends ValueObject {
 		this.role = role;
 	}
 
-	public ParamField getField() {
+	public StorableField getField() {
 		return field;
 	}
 
-	public void setField(ParamField field) {
+	public void setField(StorableField field) {
 		this.field = field;
 	}
 
 	@Override
 	public Object getValue(Hashtable<String, Storable> roles) {
-		Storable st = roles.get(role);
 		if (role == null) {
 			return null;
+		} else if (roles == null) {
+			return null;
 		} else {
+			Storable st = roles.get(role);
 			switch (st.TYPE) {
 			case WORLD:
-				return getWorldValue((World) st);
+				return StorableFieldManager.getFieldValue((World) st, field);
 			case ZONE:
-				return getZoneValue((Zone) st);
+				return StorableFieldManager.getFieldValue((Zone) st, field);
 			case LANGUAGE:
-				return getLanguageValue((Language) st);
+				return StorableFieldManager.getFieldValue((Language) st, field);
 			case CITY:
-				return getCityValue((City) st);
+				return StorableFieldManager.getFieldValue((City) st, field);
 			case INDIVIDUAL:
-				return getIndividualValue((Individual) st);
+				return StorableFieldManager.getFieldValue((Individual) st, field);
 			default:
 				return null;
 			}
 		}
 	}
 
-	private Object getWorldValue(World st) {
-		// TODO
-		switch (field) {
-		case WORLD_NCITIZENS:
-			break;
-		case WORLD_NZONES:
-			break;
-		default:
-			return null;
-		}
-		return null;
-	}
-
-	private Object getZoneValue(Zone st) {
-		// TODO
-		switch (field) {
-		case ZONE_NCITIES:
-			break;
-		case ZONE_NCITIZENS:
-			break;
-		default:
-			return null;
-		}
-		return null;
-	}
-
-	private Object getLanguageValue(Language st) {
-		// TODO
-		switch (field) {
-		default:
-			return null;
-		}
-		// return null;
-	}
-
-	private Object getCityValue(City st) {
-		// TODO
-		switch (field) {
-		case CITY_NCITIZENS:
-			break;
-		default:
-			return null;
-		}
-		return null;
-	}
-
-	private Object getIndividualValue(Individual st) {
-		// TODO
-		switch (field) {
-		case IND_BEA:
-			break;
-		case IND_BIRTH:
-			break;
-		case IND_CHA:
-			break;
-		case IND_COM:
-			break;
-		case IND_CON:
-			break;
-		case IND_FER:
-			break;
-		case IND_HOR:
-			break;
-		case IND_INT:
-			break;
-		case IND_SPE:
-			break;
-		case IND_STR:
-			break;
-		case IND_WIS:
-			break;
-		default:
-			return null;
-		}
-		return null;
-	}
-	
 	@Override
 	public Object getValue() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -169,14 +94,13 @@ class ComplexValueObject extends ValueObject {
 			return false;
 		return true;
 	}
-	
-	
 }
 
 class SimpleValueObject extends ValueObject {
 	private Object value;
 
 	public SimpleValueObject(Object value) {
+		super(false);
 		this.value = value;
 	}
 
@@ -218,6 +142,10 @@ class SimpleValueObject extends ValueObject {
 }
 
 abstract class ValueObject {
+	final boolean complex;
+	ValueObject(boolean complex) {
+		this.complex = complex;
+	}
 	public abstract Object getValue();
 	public abstract Object getValue(Hashtable<String, Storable> roles);
 	@Override
@@ -229,26 +157,18 @@ abstract class ValueObject {
 public class SimpleParameter extends AbstractParameter {
 
 	public static enum ParamType {
-		EQUALS, EQUAL_OR_GREATER_THAN, EQUAL_OR_LESSER_THAN, GREATER_THAN, LESSER_THAN, NOT_EQUALS
-	};
-
-	public static enum ParamField {
-		WORLD_NZONES, WORLD_NCITIZENS,
-		ZONE_NCITIES, ZONE_NCITIZENS,
-		CITY_NCITIZENS,
-		IND_BIRTH, IND_STR, IND_CON, IND_SPE,
-		IND_INT, IND_WIS, IND_CHA, IND_BEA,
-		IND_FER, IND_HOR, IND_COM
+		EQUALS, EQUAL_OR_GREATER_THAN, EQUAL_OR_LESSER_THAN, GREATER_THAN, LESSER_THAN, NOT_EQUALS,
+		EQUALS_IGNORE_CASE, NOT_EQUALS_IGNORE_CASE, STARTS_WITH, ENDS_WITH, MATCHES, IS_MATCHED
 	};
 
 	private StorableType stType;
-	private ParamField paramField;
+	private StorableField paramField;
 	private ParamType paramType;
 	private ValueObject value;
 	
 	private Hashtable<String, Storable> roles;
 	
-	public SimpleParameter(StorableType stType, ParamField paramField,
+	public SimpleParameter(StorableType stType, StorableField paramField,
 			ParamType paramType, ValueObject value) {
 		this.stType = stType;
 		this.paramType = paramType;
@@ -256,7 +176,7 @@ public class SimpleParameter extends AbstractParameter {
 		this.value = value;
 	}
 	
-	public SimpleParameter(StorableType stType, ParamField paramField,
+	public SimpleParameter(StorableType stType, StorableField paramField,
 			ParamType paramType, Object valueObject) {
 		this.stType = stType;
 		this.paramType = paramType;
@@ -264,8 +184,8 @@ public class SimpleParameter extends AbstractParameter {
 		this.value = new SimpleValueObject(valueObject);
 	}
 	
-	public SimpleParameter(StorableType stType, ParamField paramField,
-			ParamType paramType, String valueRole, ParamField valueField) {
+	public SimpleParameter(StorableType stType, StorableField paramField,
+			ParamType paramType, String valueRole, StorableField valueField) {
 		this.stType = stType;
 		this.paramType = paramType;
 		this.paramField = paramField;
@@ -293,55 +213,101 @@ public class SimpleParameter extends AbstractParameter {
 		}
 	}
 
-	public boolean evalWorld(World target) {
-		switch (paramField) {
-		case WORLD_NZONES:
-			return evalNumValue(target.getNZones());
-		case WORLD_NCITIZENS:
-			return evalNumValue(target.getNCitizens());
+	@Override
+	public boolean isComplex() {
+		return value.complex;
+	}
 
-		default:
-			return false;
+	public boolean evalWorld(World target) {
+		Object tgvalobj = StorableFieldManager.getFieldValue(target, paramField);
+		if (tgvalobj != null) {
+			if (paramField == StorableField.WORLD_NZONES ||
+					paramField == StorableField.WORLD_NCITIZENS) {
+				try {
+					int tgval = (Integer) tgvalobj;
+					return evalNumValue(tgval);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		return false;
 	}
 
 	public boolean evalZone(Zone target) {
-		switch (paramField) {
-		case ZONE_NCITIES:
-			return evalNumValue(target.getNCities());
-		case ZONE_NCITIZENS:
-			return evalNumValue(target.getNCitizens());
-
-		default:
-			return false;
+		Object tgvalobj = StorableFieldManager.getFieldValue(target, paramField);
+		if (tgvalobj != null) {
+			if (paramField == StorableField.ZONE_NCITIES ||
+					paramField == StorableField.ZONE_NCITIZENS) {
+				try {
+					int tgval = (Integer) tgvalobj;
+					return evalNumValue(tgval);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		return false;
 	}
 
 	public boolean evalLanguage(Language target) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean evalCity(City target) {
-		switch (paramField) {
-		case CITY_NCITIZENS:
-			return evalNumValue(target.getNCitizens());
-
-		default:
-			return false;
+		Object tgvalobj = StorableFieldManager.getFieldValue(target, paramField);
+		if (tgvalobj != null) {
+			if (paramField == StorableField.CITY_NCITIZENS) {
+				try {
+					int tgval = (Integer) tgvalobj;
+					return evalNumValue(tgval);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		return false;
+	}
+
+	public boolean evalIndividual(Individual target) {
+		Object tgvalobj = StorableFieldManager.getFieldValue(target, paramField);
+		if (tgvalobj != null) {
+			if (paramField == StorableField.IND_BIRTH || paramField == StorableField.IND_DEATH) {
+				try {
+					float tgval = (Float) tgvalobj;
+					return evalNumValue(tgval);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else if (paramField == StorableField.IND_STR || paramField == StorableField.IND_CON
+					|| paramField == StorableField.IND_SPE || paramField == StorableField.IND_INT
+					|| paramField == StorableField.IND_WIS || paramField == StorableField.IND_BEA
+					|| paramField == StorableField.IND_CHA || paramField == StorableField.IND_FER
+					|| paramField == StorableField.IND_HOR || paramField == StorableField.IND_COM) {
+				try {
+					int tgval = (Integer) tgvalobj;
+					return evalNumValue(tgval);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
 	}
 
 	private boolean evalNumValue(int targetVal) {
+		Object obj = null;
 		int val;
 		try {
 			if (value == null) {
 				return false;
 			} else if (roles == null) {
-				val = (Integer) value.getValue();
+				obj = value.getValue();
 			} else {
-				val = (Integer) value.getValue(roles);
+				obj = value.getValue(roles);
 			}
+			//TODO getValue = null
+			val = (Integer) obj;
 		} catch(Exception e){
 			e.printStackTrace();
 			return false;
@@ -358,46 +324,19 @@ public class SimpleParameter extends AbstractParameter {
 		}
 	}
 
-	public boolean evalIndividual(Individual target) {
-		switch (paramField) {
-		case IND_BIRTH:
-			return evalNumValue(target.getBirthDate());
-		case IND_STR:
-			return evalNumValue(target.getStrength());
-		case IND_CON:
-			return evalNumValue(target.getConstitution());
-		case IND_SPE:
-			return evalNumValue(target.getSpeed());
-		case IND_INT:
-			return evalNumValue(target.getIntelligence());
-		case IND_WIS:
-			return evalNumValue(target.getWisdom());
-		case IND_BEA:
-			return evalNumValue(target.getBeauty());
-		case IND_CHA:
-			return evalNumValue(target.getCharisma());
-		case IND_FER:
-			return evalNumValue(target.getFertility());
-		case IND_HOR:
-			return evalNumValue(target.getHorniness());
-		case IND_COM:
-			return evalNumValue(target.getComformity());
-
-		default:
-			return false;
-		}
-	}
-
-	private boolean evalNumValue(double targetVal) {
-		double val;
+	private boolean evalNumValue(float targetVal) {
+		Object obj = null;
+		float val;
 		try {
 			if (value == null) {
 				return false;
 			} else if (roles == null) {
-				val = (Double) value.getValue();
+				obj = value.getValue();
 			} else {
-				val = (Double) value.getValue(roles);
+				obj = value.getValue(roles);
 			}
+			//TODO getValue = null
+			val = (Float) obj;
 		} catch(Exception e){
 			e.printStackTrace();
 			return false;
@@ -410,6 +349,39 @@ public class SimpleParameter extends AbstractParameter {
 		case LESSER_THAN: return (targetVal < val);
 		case NOT_EQUALS: return (targetVal != val);
 
+		default: return false;
+		}
+	}
+
+	@SuppressWarnings("unused")//TODO
+	private boolean evalStringValue(String targetVal) {
+		if (targetVal == null) return false;
+		Object obj = null;
+		String val;
+		try {
+			if (value == null) {
+				return false;
+			} else if (roles == null) {
+				obj = value.getValue();
+			} else {
+				obj = value.getValue(roles);
+			}
+			//TODO getValue = null
+			val = obj.toString();
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+		switch (paramType) {
+		case EQUALS: return (targetVal.equals(val));
+		case EQUALS_IGNORE_CASE: return (targetVal.equalsIgnoreCase(val));
+		case NOT_EQUALS: return (!targetVal.equals(val));
+		case NOT_EQUALS_IGNORE_CASE: return (!targetVal.equalsIgnoreCase(val));
+		case STARTS_WITH: return (targetVal.startsWith(val));
+		case ENDS_WITH: return (targetVal.endsWith(val));
+		case MATCHES: return (targetVal.matches(val));
+		case IS_MATCHED: return (val.matches(targetVal));
+		
 		default: return false;
 		}
 	}

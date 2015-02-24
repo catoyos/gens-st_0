@@ -20,6 +20,11 @@ public class EQUIVParameter extends AbstractParameter {
 	}
 
 	@Override
+	public boolean isComplex() {
+		return param1.isComplex() || param2.isComplex();
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
