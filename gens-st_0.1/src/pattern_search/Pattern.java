@@ -1,6 +1,6 @@
 package pattern_search;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,11 +22,11 @@ public class Pattern<T extends Storable> {
 		IND_GRANDPARENT, IND_GRANDCHILD, IND_SIBLING, 
 		IND_ORIGINAL_ZONE, IND_CURRENT_ZONE, IND_CURRENT_CITY
 		};
-	
+
+	private final StorableType type;
 	private PatternContainsAs as;
 	private String mainRole;
-	private StorableType type;
-	private HashMap<String, Storable> roles;
+	private Hashtable<String, Storable> roles;
 	private List<AbstractParameter> paramsS;
 	private List<AbstractParameter> paramsC;
 	private List<Pattern<? extends Storable>> contains;
@@ -57,6 +57,8 @@ public class Pattern<T extends Storable> {
 		this.type = type;
 		this.paramsS = new LinkedList<AbstractParameter>();
 		this.paramsC = new LinkedList<AbstractParameter>();
+		this.roles = new Hashtable<String, Storable>();
+		
 		if (params != null) {
 			for (AbstractParameter parameter : params) {
 				if (parameter != null) {
@@ -68,6 +70,7 @@ public class Pattern<T extends Storable> {
 				}
 			}
 		}
+		
 		this.contains = new LinkedList<Pattern<? extends Storable>>();
 		if (contains != null) {
 			for (Pattern<? extends Storable> pattern : contains) {
@@ -92,7 +95,7 @@ public class Pattern<T extends Storable> {
 
 	@SuppressWarnings("unchecked")
 	public Result<T> eval(T object){
-		Result<T> res = new Result<T> (object, mainRole);
+		Result<T> res = new Result<T> (object, mainRole, roles);
 		if (object == null) return res;
 		boolean pos = true;
 		for (AbstractParameter parameter : paramsS) {
@@ -100,8 +103,9 @@ public class Pattern<T extends Storable> {
 		}
 		
 		if (pos) {
-			List<?> containsResults = null;
+			List<? extends Result<? extends Storable>> containsResults = null;
 			for (Pattern<? extends Storable> member : contains) {
+				member.putAllRoles(res.getRoles());
 				switch (member.type) {
 				case WORLD:
 					containsResults = evalChildWorldPattern(object, (Pattern<World>) member);
@@ -126,9 +130,10 @@ public class Pattern<T extends Storable> {
 				pos &= (containsResults != null && !containsResults.isEmpty());
 			}
 		}
+		
 		if (pos) {
 			for (AbstractParameter parameter : paramsC) {
-				parameter.setRoles(null);
+				parameter.setRoles(res.getRoles());
 				pos &= parameter.eval(object);
 			}
 		}
@@ -184,11 +189,6 @@ public class Pattern<T extends Storable> {
 	private List<Result<Language>> evalChildLanguagePattern(T object, Pattern<Language> member) {
 		List<Result<Language>> res = null;
 		List<Language> aux = null;
-		
-//		switch (member.as) {
-//		
-//		default: return null;
-//		}
 
 		res = member.eval(aux);
 		return res;
@@ -286,12 +286,16 @@ public class Pattern<T extends Storable> {
 		return type;
 	}
 
-	public HashMap<String, Storable> getRoles() {
+	public Hashtable<String, Storable> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(HashMap<String, Storable> roles) {
-		this.roles = roles;
+	public void putRole(String role, Storable object) {
+		this.roles.put(role, object);
+	}
+
+	public void putAllRoles(Hashtable<String, Storable> roles) {
+		this.roles.putAll(roles);
 	}
 	
 	

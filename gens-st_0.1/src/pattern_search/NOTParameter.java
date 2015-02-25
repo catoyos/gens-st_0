@@ -7,18 +7,17 @@ public class NOTParameter extends AbstractParameter {
 	private AbstractParameter param;
 	
 	public NOTParameter(AbstractParameter param) {
-		//TODO CONTROLAR NULLS, THIS==PARAM...
 		this.param = param;
 	}
 
 	@Override
 	public boolean eval(Storable target) {
-		return !param.eval(target);
+		return param == null || !param.eval(target);
 	}
 
 	@Override
 	public boolean isComplex() {
-		return param.isComplex();
+		return param == null || param.isComplex();
 	}
 
 	@Override

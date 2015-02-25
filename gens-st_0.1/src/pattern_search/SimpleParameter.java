@@ -298,13 +298,13 @@ public class SimpleParameter extends AbstractParameter {
 		int val;
 		try {
 			if (value == null) {
-				return false;
+				return true;
 			} else if (roles == null) {
 				obj = value.getValue();
 			} else {
 				obj = value.getValue(roles);
 			}
-			//TODO getValue = null
+			if (obj == null) return true;
 			val = (Integer) obj;
 		} catch(Exception e){
 			e.printStackTrace();
@@ -327,13 +327,13 @@ public class SimpleParameter extends AbstractParameter {
 		float val;
 		try {
 			if (value == null) {
-				return false;
+				return true;
 			} else if (roles == null) {
 				obj = value.getValue();
 			} else {
 				obj = value.getValue(roles);
 			}
-			//TODO getValue = null
+			if (obj == null) return true;
 			val = (Float) obj;
 		} catch(Exception e){
 			e.printStackTrace();
@@ -358,13 +358,13 @@ public class SimpleParameter extends AbstractParameter {
 		String val;
 		try {
 			if (value == null) {
-				return false;
+				return true;
 			} else if (roles == null) {
 				obj = value.getValue();
 			} else {
 				obj = value.getValue(roles);
 			}
-			//TODO getValue = null
+			if (obj == null) return true;
 			val = obj.toString();
 		} catch(Exception e){
 			e.printStackTrace();

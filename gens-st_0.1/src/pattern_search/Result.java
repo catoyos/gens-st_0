@@ -1,6 +1,6 @@
 package pattern_search;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 
 import model.Storable;
 
@@ -8,16 +8,16 @@ public class Result<T extends Storable> {
 
 	private boolean positive;
 	private T res;
-	private HashMap<String, Storable> roles;
+	private Hashtable<String, Storable> roles;
 	
 	protected Result(T res, String role) {
-		this(res, role, new HashMap<String, Storable>());
+		this(res, role, new Hashtable<String, Storable>());
 	}
 	
-	protected Result(T res, String role, HashMap<String, Storable> roles) {
+	protected Result(T res, String role, Hashtable<String, Storable> roles) {
 		this.positive = false;
 		this.res = res;
-		this.roles = new HashMap<String, Storable>(roles);
+		this.roles = new Hashtable<String, Storable>(roles);
 		this.roles.put(role, res);
 	}
 
@@ -37,16 +37,20 @@ public class Result<T extends Storable> {
 		this.res = res;
 	}
 
-	public HashMap<String, Storable> getRoles() {
+	public Hashtable<String, Storable> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(HashMap<String, Storable> roles) {
+	public void setRoles(Hashtable<String, Storable> roles) {
 		this.roles = roles;
 	}
 
-	public Storable put(String key, Storable object) {
-		return roles.put(key, object);
+	public void putRole(String role, Storable object) {
+		this.roles.put(role, object);
+	}
+
+	public void putAllRoles(Hashtable<String, Storable> roles) {
+		this.roles.putAll(roles);
 	}
 
 	public boolean containsRole(String key) {
