@@ -166,8 +166,6 @@ public class SimpleParameter extends AbstractParameter {
 	private ParamType paramType;
 	private ValueObject value;
 	
-	private Hashtable<String, Storable> roles;
-	
 	public SimpleParameter(StorableType stType, StorableField paramField,
 			ParamType paramType, ValueObject value) {
 		this.stType = stType;

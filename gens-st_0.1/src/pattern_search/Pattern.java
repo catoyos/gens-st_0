@@ -28,7 +28,7 @@ public class Pattern<T extends Storable> {
 	private StorableType type;
 	private HashMap<String, Storable> roles;
 	private List<AbstractParameter> paramsS;
-	private List<AbstractParameter> paramsC;//TODO
+	private List<AbstractParameter> paramsC;
 	private List<Pattern<? extends Storable>> contains;
 
 	public Pattern(String role, StorableType type) {
@@ -56,10 +56,15 @@ public class Pattern<T extends Storable> {
 		this.mainRole = role;
 		this.type = type;
 		this.paramsS = new LinkedList<AbstractParameter>();
+		this.paramsC = new LinkedList<AbstractParameter>();
 		if (params != null) {
 			for (AbstractParameter parameter : params) {
 				if (parameter != null) {
-					this.paramsS.add(parameter);
+					if (parameter.isComplex()) {
+						this.paramsC.add(parameter);
+					} else {
+						this.paramsS.add(parameter);
+					}
 				}
 			}
 		}
@@ -90,8 +95,8 @@ public class Pattern<T extends Storable> {
 		Result<T> res = new Result<T> (object, mainRole);
 		if (object == null) return res;
 		boolean pos = true;
-		for (AbstractParameter abstractParameter : paramsS) {
-			pos &= abstractParameter.eval(object);
+		for (AbstractParameter parameter : paramsS) {
+			pos &= parameter.eval(object);
 		}
 		
 		if (pos) {
@@ -119,6 +124,12 @@ public class Pattern<T extends Storable> {
 				}
 				
 				pos &= (containsResults != null && !containsResults.isEmpty());
+			}
+		}
+		if (pos) {
+			for (AbstractParameter parameter : paramsC) {
+				parameter.setRoles(null);
+				pos &= parameter.eval(object);
 			}
 		}
 		
