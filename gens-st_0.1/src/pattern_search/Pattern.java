@@ -103,9 +103,12 @@ public class Pattern<T extends Storable> {
 		}
 		
 		if (pos) {
+			List<List<? extends Result<? extends Storable>>> contsRes = new LinkedList<List<? extends Result<? extends Storable>>>();
+			
+			Hashtable< String, Storable> auxhm = res.getRoles();
 			List<? extends Result<? extends Storable>> containsResults = null;
 			for (Pattern<? extends Storable> member : contains) {
-				member.putAllRoles(res.getRoles());
+				member.putAllRoles(auxhm);
 				switch (member.type) {
 				case WORLD:
 					containsResults = evalChildWorldPattern(object, (Pattern<World>) member);

@@ -1,5 +1,7 @@
 package pattern_search;
 
+import java.util.Hashtable;
+
 import model.Storable;
 
 public class XORParameter extends AbstractParameter {
@@ -8,20 +10,33 @@ public class XORParameter extends AbstractParameter {
 	private AbstractParameter param2;
 	
 	public XORParameter(AbstractParameter param1, AbstractParameter param2) {
-		//TODO CONTROLAR NULLS, THIS==PARAM...
 		this.param1 = param1;
 		this.param2 = param2;
 	}
 
 	@Override
 	public boolean eval(Storable target) {
-		boolean res = param1.eval(target);		
-		return res != param2.eval(target);
+		if (param1 == param2) return false;
+		else if (param1 != null && param1.equals(param2)) return false;
+		
+		boolean res1 = param1 == null ? false : param1.eval(target);
+		boolean res2 = param2 == null ? false : param2.eval(target);
+		
+		return res1 != res2;
 	}
 
 	@Override
 	public boolean isComplex() {
-		return param1.isComplex()||param2.isComplex();
+		if (param1 != null && param1.isComplex()) return true;
+		else if (param2 != null && param2.isComplex()) return true;
+		else return false;
+	}
+
+	@Override
+	public void setRoles(Hashtable<String, Storable> roles) {
+		super.setRoles(roles);
+		if (param1 != null) param1.setRoles(roles);
+		if (param2 != null) param2.setRoles(roles);
 	}
 
 	@Override

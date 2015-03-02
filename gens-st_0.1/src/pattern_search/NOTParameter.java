@@ -1,5 +1,7 @@
 package pattern_search;
 
+import java.util.Hashtable;
+
 import model.Storable;
 
 public class NOTParameter extends AbstractParameter {
@@ -17,7 +19,14 @@ public class NOTParameter extends AbstractParameter {
 
 	@Override
 	public boolean isComplex() {
-		return param == null || param.isComplex();
+		if (param != null && param.isComplex()) return true;
+		else return false;
+	}
+
+	@Override
+	public void setRoles(Hashtable<String, Storable> roles) {
+		super.setRoles(roles);
+		if (param != null) param.setRoles(roles);
 	}
 
 	@Override

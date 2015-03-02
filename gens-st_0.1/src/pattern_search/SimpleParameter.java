@@ -351,7 +351,7 @@ public class SimpleParameter extends AbstractParameter {
 		}
 	}
 
-	@SuppressWarnings("unused")//TODO
+	@SuppressWarnings("unused")
 	private boolean evalStringValue(String targetVal) {
 		if (targetVal == null) return false;
 		Object obj = null;

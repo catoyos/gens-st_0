@@ -1,6 +1,7 @@
 package pattern_search;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import model.Storable;
@@ -23,7 +24,7 @@ public class ANDParameter extends AbstractParameter {
 	public ANDParameter(List<AbstractParameter> params) {
 		this.params = new ArrayList<AbstractParameter>(params.size());
 		for (AbstractParameter abstractParameter : params) {
-			if (abstractParameter != null && this != abstractParameter && !this.params.contains(abstractParameter)) {
+			if (abstractParameter != null && !this.params.contains(abstractParameter)) {
 				this.params.add(abstractParameter);
 			}
 		}
@@ -32,7 +33,7 @@ public class ANDParameter extends AbstractParameter {
 	@Override
 	public boolean eval(Storable target) {
 		for (AbstractParameter abstractParameter : params) {
-			if (!abstractParameter.eval(target)) {
+			if (abstractParameter == null || !abstractParameter.eval(target)) {
 				return false;
 			}
 		}
@@ -42,11 +43,19 @@ public class ANDParameter extends AbstractParameter {
 	@Override
 	public boolean isComplex() {
 		for (AbstractParameter abstractParameter : params) {
-			if (abstractParameter.isComplex()) {
+			if (abstractParameter != null && abstractParameter.isComplex()) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void setRoles(Hashtable<String, Storable> roles) {
+		super.setRoles(roles);
+		for (AbstractParameter abstractParameter : params) {
+			if (abstractParameter != null) abstractParameter.setRoles(roles);
+		}
 	}
 
 	@Override
